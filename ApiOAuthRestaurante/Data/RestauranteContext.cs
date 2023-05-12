@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ApiOauthRestaurante.Models;
+using NuggetRestauranteXZX.Models;
 using System.Collections.Generic;
 
 

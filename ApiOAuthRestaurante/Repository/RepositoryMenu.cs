@@ -1,5 +1,6 @@
 ﻿using ApiOauthRestaurante.Data;
-using ApiOauthRestaurante.Models;
+using Microsoft.EntityFrameworkCore;
+using NuggetRestauranteXZX.Models;
 
 namespace ApiOauthRestaurante.Repository
 {
@@ -15,27 +16,27 @@ namespace ApiOauthRestaurante.Repository
 
         //MENU
 
-        public List<ItemMenu> GetItemMenu()
+        public async Task<List<ItemMenu>> GetItemMenuAsync()
         {
             var consulta = from datos in this.context.ItemMenu
                            select datos;
-            return consulta.ToList();
+            return await consulta.ToListAsync();
         }
 
-        public List<ItemMenu> GetItemMenuCategoria(string categoria)
+        public async Task<List<ItemMenu>> GetItemMenuCategoria(string categoria)
         {
             var consulta = from datos in this.context.ItemMenu
                            where datos.Categoria == categoria
                            select datos;
-            return consulta.ToList();
+            return await consulta.ToListAsync();
         }
 
-        public ItemMenu FindItemMenu(int idmenu)
+        public async Task<ItemMenu> FindItemMenu(int idmenu)
         {
             var consulta = from datos in this.context.ItemMenu
                            where datos.IdMenu == idmenu
                            select datos;
-            return consulta.FirstOrDefault();
+            return await consulta.FirstAsync();
         }
 
 
@@ -65,7 +66,7 @@ namespace ApiOauthRestaurante.Repository
                   decimal precio)
         {
 
-            ItemMenu menu = this.FindItemMenu(idmenu);
+            ItemMenu menu = await this.FindItemMenu(idmenu);
 
             menu.Nombre = nombre;
             menu.Categoria = categoria;
@@ -79,7 +80,7 @@ namespace ApiOauthRestaurante.Repository
 
         public async Task DeleteItemMenuAsync(int idmenu)
         {
-            ItemMenu menu = this.FindItemMenu(idmenu);
+            ItemMenu menu = await this.FindItemMenu(idmenu);
 
             this.context.ItemMenu.Remove(menu);
 
@@ -89,27 +90,27 @@ namespace ApiOauthRestaurante.Repository
 
         //PEDIDO
 
-        public List<Pedido> GetPedidos()
+        public async Task<List<Pedido>> GetPedidos()
         {
             var consulta = from datos in this.context.Pedido
                            select datos;
-            return consulta.ToList();
+            return await consulta.ToListAsync();
         }
 
-        public List<Pedido> GetPedidosMesa(int idmesa)
+        public async Task<List<Pedido>> GetPedidosMesa(int idmesa)
         {
             var consulta = from datos in this.context.Pedido
                            where datos.IdMesa == idmesa
                            select datos;
-            return consulta.ToList();
+            return await consulta.ToListAsync();
         }
 
-        public Pedido FindPedido(int idpedido)
+        public async Task<Pedido> FindPedido(int idpedido)
         {
             var consulta = from datos in this.context.Pedido
                            where datos.IdPedido == idpedido
                            select datos;
-            return consulta.FirstOrDefault();
+            return await consulta.FirstOrDefaultAsync();
         }
 
         //public List<ItemMenu> GetItemMenuPedidos(int idmenu)
@@ -153,7 +154,7 @@ namespace ApiOauthRestaurante.Repository
                  int idmesa, int idmenu, int cantidad)
         {
 
-            Pedido pedido = this.FindPedido(idpedido);
+            Pedido pedido = await this.FindPedido(idpedido);
 
             pedido.Precio = precio;
             pedido.Fecha = fecha;
@@ -166,9 +167,10 @@ namespace ApiOauthRestaurante.Repository
         }
 
 
+
         public async Task DeletePedidoAsync(int idpedido)
         {
-            Pedido pedido = this.FindPedido(idpedido);
+            Pedido pedido = await this.FindPedido(idpedido);
 
             this.context.Pedido.Remove(pedido);
 
@@ -176,17 +178,17 @@ namespace ApiOauthRestaurante.Repository
         }
 
 
-        public List<Pedido> BuscarPedidoPagar(int idmesa)
+        public async Task<List<Pedido>> BuscarPedidoPagar(int idmesa)
         {
             var consulta = from datos in this.context.Pedido
                            where datos.IdMesa == idmesa
                            select datos;
-            return consulta.ToList();
+            return await consulta.ToListAsync();
         }
 
         public async Task PagarPedido(int idmesa)
         {
-            List<Pedido> pedidos = this.BuscarPedidoPagar(idmesa);
+            List<Pedido> pedidos = await this.BuscarPedidoPagar(idmesa);
 
             foreach (var pedido in pedidos)
             {
@@ -198,20 +200,23 @@ namespace ApiOauthRestaurante.Repository
 
 
         //MESA
-        public List<Mesa> GetMesas()
+        public async Task<List<Mesa>> GetMesasAsync()
         {
             var consulta = from datos in this.context.Mesa
                            select datos;
-            return consulta.ToList();
+            return await consulta.ToListAsync();
         }
 
-        public Mesa FindMesa(int idmesa)
+        public async Task<Mesa> FindMesaAsync(int idmesa)
         {
             var consulta = from datos in this.context.Mesa
                            where datos.IdMesa == idmesa
                            select datos;
-            return consulta.FirstOrDefault();
+            return await consulta.FirstAsync();
         }
+
+        
+
 
         public async Task InsertMesaAsync
          (string estado, int cantidad)
@@ -234,7 +239,7 @@ namespace ApiOauthRestaurante.Repository
              (int idmesa, string estado, int cantidad)
         {
 
-            Mesa mesa = this.FindMesa(idmesa);
+            Mesa mesa = await this.FindMesaAsync(idmesa);
 
             mesa.Estado = estado;
 
@@ -244,10 +249,11 @@ namespace ApiOauthRestaurante.Repository
         }
 
 
+
         public async Task DeleteMesaAsync(int idmesa)
         {
 
-            Mesa mesa = this.FindMesa(idmesa);
+            Mesa mesa = await this.FindMesaAsync(idmesa);
 
             this.context.Mesa.Remove(mesa);
 
@@ -258,7 +264,7 @@ namespace ApiOauthRestaurante.Repository
 
         public async Task MesaOcupado(int idmesa)
         {
-            Mesa mesa = this.FindMesa(idmesa);
+            Mesa mesa = await this.FindMesaAsync(idmesa);
 
             mesa.Estado = "Ocupado";
  
@@ -267,7 +273,7 @@ namespace ApiOauthRestaurante.Repository
 
         public async Task MesaLibre(int idmesa)
         {
-            Mesa mesa = this.FindMesa(idmesa);
+            Mesa mesa = await this.FindMesaAsync(idmesa);
 
             mesa.Estado = "Libre";
 
