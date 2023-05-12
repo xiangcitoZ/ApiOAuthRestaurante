@@ -17,17 +17,44 @@ namespace ApiOAuthRestaurante.Controllers
             this.repo = repo;
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public async Task<ActionResult<List<Pedido>>> GetPedido()
         {
             return await this.repo.GetPedidos();  
         }
 
+        [HttpGet("[action]")]
+        public async Task<ActionResult<List<Pedido>>> GetPedidoMesa(int idmesa)
+        {
+            return await this.repo.GetPedidosMesa(idmesa);
+        }
+
+
+        [HttpGet("[action]/{idmesa}")]
+        public async Task<ActionResult> BuscarPedidoPagar(int idmesa)
+        {
+            await this.repo.BuscarPedidoPagar(idmesa);
+            return Ok();
+        }
+
+        [HttpGet("[action]/{idmesa}")]
+        public async Task<ActionResult> PagarPedido(int idmesa)
+        {
+            await this.repo.PagarPedido(idmesa);
+            return Ok();
+        }
+
+
+        [HttpGet("[action]/{idpedido}")]
+        public async Task<ActionResult<Pedido>> FindPedido(int idpedido)
+        {
+            return await this.repo.FindPedido(idpedido);
+        }
 
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> Create(Pedido pedido)
+        public async Task<ActionResult> Create(Pedido pedido)
         {
             await this.repo.InsertPedidoAsync
                 (pedido.IdPedido, pedido.Precio, DateTime.Now,
@@ -56,6 +83,9 @@ namespace ApiOAuthRestaurante.Controllers
             await this.repo.DeletePedidoAsync(idpedido);
             return Ok();
         }
+
+
+       
 
 
     }

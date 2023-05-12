@@ -186,6 +186,8 @@ namespace ApiOauthRestaurante.Repository
             return await consulta.ToListAsync();
         }
 
+
+
         public async Task PagarPedido(int idmesa)
         {
             List<Pedido> pedidos = await this.BuscarPedidoPagar(idmesa);
@@ -215,7 +217,8 @@ namespace ApiOauthRestaurante.Repository
             return await consulta.FirstAsync();
         }
 
-        
+    
+
 
 
         public async Task InsertMesaAsync

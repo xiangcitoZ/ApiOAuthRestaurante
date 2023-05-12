@@ -24,6 +24,23 @@ namespace ApiOAuthRestaurante.Controllers
             return await this.repo.GetItemMenuAsync();
         }
 
+
+       
+
+        [HttpGet("[action]/{categoria}")]
+        public async Task<ActionResult<List<ItemMenu>>> GetItemMenuCategoria(string categoria)
+        {
+            return await this.repo.GetItemMenuCategoria(categoria);
+        }
+
+
+        [HttpGet("[action]/{idmenu}")]
+        public async Task<ActionResult<ItemMenu>> FindItemMenu(int idmenu)
+        {
+            return await this.repo.FindItemMenu(idmenu);
+        }
+
+
         [HttpPost]
         [Route("[action]")]
         public async Task<ActionResult>

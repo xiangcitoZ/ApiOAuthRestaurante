@@ -22,6 +22,13 @@ namespace ApiOAuthRestaurante.Controllers
            
         }
 
+        [HttpGet("{idmesa}")]
+        public async Task<ActionResult<Mesa>> FindMesa(int idmesa)
+        {
+            return await this.repo.FindMesaAsync(idmesa);
+        }
+
+
 
         [HttpPost]
         [Route("[action]")]
@@ -47,6 +54,21 @@ namespace ApiOAuthRestaurante.Controllers
             await this.repo.DeleteMesaAsync(idmesa);
             return Ok();
         }
+
+        [HttpGet("[action]/{idmesa}")]
+        public async Task<ActionResult> MesaOcupada(int idmesa)
+        {
+            await this.repo.MesaOcupado(idmesa);
+            return Ok();
+        }
+
+        [HttpGet("[action]/{idmesa}")]
+        public async Task<ActionResult> MesaLibre(int idmesa)
+        {
+            await this.repo.MesaLibre(idmesa);
+            return Ok();
+        }
+
 
     }
 }
