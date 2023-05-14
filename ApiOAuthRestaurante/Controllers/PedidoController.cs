@@ -23,7 +23,7 @@ namespace ApiOAuthRestaurante.Controllers
             return await this.repo.GetPedidos();  
         }
 
-        [HttpGet("[action]")]
+        [HttpGet("[action]/{idmesa}")]
         public async Task<ActionResult<List<Pedido>>> GetPedidoMesa(int idmesa)
         {
             return await this.repo.GetPedidosMesa(idmesa);
