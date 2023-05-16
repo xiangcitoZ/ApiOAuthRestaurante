@@ -1,5 +1,6 @@
 using ApiOauthRestaurante.Data;
 using ApiOauthRestaurante.Repository;
+using ApiOAuthRestaurante.Helpers;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
@@ -25,6 +26,12 @@ string connectionString = keyVaultSecret.Value;
 builder.Services.AddTransient<RepositoryMenu>();
 builder.Services.AddDbContext<RestauranteContext>
     (options => options.UseSqlServer(connectionString));
+
+//LOGIN
+builder.Services.AddSingleton<HelperOAuthToken>();
+HelperOAuthToken helper = new HelperOAuthToken(builder.Configuration);
+builder.Services.AddAuthentication(helper.GetAuthenticationOptions())
+    .AddJwtBearer(helper.GetJwtOptions());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -52,6 +59,7 @@ app.UseSwaggerUI(options =>
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

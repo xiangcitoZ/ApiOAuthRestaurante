@@ -15,8 +15,8 @@ namespace ApiOauthRestaurante.Data
 
         public DbSet<Mesa> Mesa { get; set; }
 
-      
+        public DbSet<Usuario> Usuario { get; set; }
 
-       
+
     }
 }

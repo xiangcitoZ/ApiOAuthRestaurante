@@ -283,6 +283,39 @@ namespace ApiOauthRestaurante.Repository
             await this.context.SaveChangesAsync();
         }
 
+        //LOGIN 
+        public async Task<Usuario> ExisteUsuario(string username, string password)
+        {
+            return await this.context.Usuario
+                .FirstOrDefaultAsync(x => x.Email == username && x.Password == password);
+        }
+
+        private async Task<int> GetMaxUserAsync()
+        {
+            if (this.context.Usuario.Count() == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return await this.context.Usuario.MaxAsync(x => x.IdUsuario) + 1;
+            }
+        }
+
+        public async Task RegisterAsync(Usuario user)
+        {
+            Usuario newUser = new Usuario()
+            {
+                IdUsuario = await this.GetMaxUserAsync(),
+                Nombre = user.Nombre,
+                Password = user.Password,
+                Email = user.Email,              
+                ImagenPerfil = user.ImagenPerfil
+            };
+
+            this.context.Add(newUser);
+            await this.context.SaveChangesAsync();
+        }
 
     }
 
