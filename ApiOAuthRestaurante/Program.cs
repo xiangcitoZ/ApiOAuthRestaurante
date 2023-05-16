@@ -1,14 +1,27 @@
 using ApiOauthRestaurante.Data;
 using ApiOauthRestaurante.Repository;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-string connectionString =
-    builder.Configuration.GetConnectionString("SqlAzure");
+builder.Services.AddAzureClients(factory =>
+{
+    factory.AddSecretClient(builder.Configuration.GetSection("KeyVault"));
+});
+
+SecretClient secretClient =
+ builder.Services.BuildServiceProvider().GetService<SecretClient>();
+KeyVaultSecret keyVaultSecret = await
+ secretClient.GetSecretAsync("SqlAzure");
+
+
+string connectionString = keyVaultSecret.Value;
+    
 builder.Services.AddTransient<RepositoryMenu>();
 builder.Services.AddDbContext<RestauranteContext>
     (options => options.UseSqlServer(connectionString));
