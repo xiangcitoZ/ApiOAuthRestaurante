@@ -22,7 +22,10 @@ KeyVaultSecret keyVaultSecret = await
 
 
 string connectionString = keyVaultSecret.Value;
-    
+
+//string connectionString =
+//    builder.Configuration.GetConnectionString("SqlServer");
+
 builder.Services.AddTransient<RepositoryMenu>();
 builder.Services.AddDbContext<RestauranteContext>
     (options => options.UseSqlServer(connectionString));
